@@ -125,47 +125,75 @@ async def get_character(ctx, uid: str, char_num: int):
                 )
                 
                 # Light Cone info
-                lc = char['light_cone']
-                embed.add_field(
-                    name="🔆 Light Cone",
-                    value=f"**{lc['name']}** (S{lc['rank']})\nLevel: {lc['level']}\nRarity: {'⭐' * lc['rarity']}",
-                    inline=False
-                )
+                lc = char.get('light_cone')
+                if lc:
+                    embed.add_field(
+                        name="🔆 Light Cone",
+                        value=f"**{lc['name']}** (S{lc['rank']})\nLevel: {lc['level']}\nRarity: {'⭐' * lc['rarity']}",
+                        inline=False
+                    )
+                else:
+                    embed.add_field(
+                        name="🔆 Light Cone",
+                        value="No Light Cone equipped",
+                        inline=False
+                    )
                 
                 # All Stats
-                stats = char['final_stats']
-                stat_lines = []
-                for stat in stats:
-                    if 'Base' in stat['name'] or stat['name'] == 'SPD':
-                        stat_lines.append(f"{stat['name']}: {stat['value']:,}")
-                    else:
-                        stat_lines.append(f"{stat['name']}: {stat['value']:.1f}%")
-                
-                embed.add_field(
-                    name="📊 Character Stats",
-                    value="\n".join(stat_lines),
-                    inline=False
-                )
+                stats = char.get('final_stats', [])
+                if stats:
+                    stat_lines = []
+                    for stat in stats:
+                        if 'Base' in stat['name'] or stat['name'] == 'SPD':
+                            stat_lines.append(f"{stat['name']}: {stat['value']:,}")
+                        else:
+                            stat_lines.append(f"{stat['name']}: {stat['value']:.1f}%")
+                    
+                    embed.add_field(
+                        name="📊 Character Stats",
+                        value="\n".join(stat_lines),
+                        inline=False
+                    )
+                else:
+                    embed.add_field(
+                        name="📊 Character Stats",
+                        value="Stats not available",
+                        inline=False
+                    )
                 
                 # Relic Sets
-                sets = char['relic_sets']
-                set_info = []
-                for relic_set in sets:
-                    set_info.append(f"{relic_set['name']} ({relic_set['num']}pc)")
-                
-                embed.add_field(
-                    name="🛡️ Relic Sets",
-                    value="\n".join(set_info),
-                    inline=False
-                )
+                sets = char.get('relic_sets', [])
+                if sets:
+                    set_info = []
+                    for relic_set in sets:
+                        set_info.append(f"{relic_set['name']} ({relic_set['num']}pc)")
+                    
+                    embed.add_field(
+                        name="🛡️ Relic Sets",
+                        value="\n".join(set_info),
+                        inline=False
+                    )
+                else:
+                    embed.add_field(
+                        name="🛡️ Relic Sets",
+                        value="No relic sets equipped",
+                        inline=False
+                    )
                 
                 # Relic Score
-                score = char['relic_score']
-                embed.add_field(
-                    name="🏆 Relic Score",
-                    value=f"Rank: **{score['rank']}**\nTotal: {score['total_score']}\nAverage: {score['average_score']}",
-                    inline=False
-                )
+                score = char.get('relic_score')
+                if score:
+                    embed.add_field(
+                        name="🏆 Relic Score",
+                        value=f"Rank: **{score['rank']}**\nTotal: {score['total_score']}\nAverage: {score['average_score']}",
+                        inline=False
+                    )
+                else:
+                    embed.add_field(
+                        name="🏆 Relic Score",
+                        value="Relic score not available",
+                        inline=False
+                    )
                 
                 embed.set_thumbnail(url=char['portrait'])
                 embed.set_footer(text="🌐 Visit our web version at https://app.hsr-profile.com/")
